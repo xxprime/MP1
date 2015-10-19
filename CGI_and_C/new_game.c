@@ -1,17 +1,22 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "/usr/include/mysql/mysql.h" //CHANGE THIS TO PROPER DIRECTORY
 #include "cgicustom.h"
 
+#define USER "root"
+#define PASS "root"
+
 void print_form(char *name, int str, int intel, int vit, int agi, int dex);
-int update_stat(char* mode, int *str, int *intel, int *vit, int *agi, int *dex);
+int update_stat(char *mode, int *str, int *intel, int *vit, int *agi, int *dex);
+void goto_map(char *name, int str, int intel, int vit, int agi, int dex);
 
 int main()
 {
     char name[10]={'\0'};
     char *data = NULL;
     char *mode = NULL;
-    int str = 0, intel = 0, vit = 0, agi = 0, dex = 0;
+    int str = 1, intel = 1, vit = 1, agi = 1, dex = 1;
 
     cgi_init("MP1 Title_newgame");
 
@@ -26,12 +31,35 @@ int main()
         dex = atoi(parse_data(data, "dex", "multipart/form-data"));
         if(update_stat(mode, &str, &intel, &vit, &agi, &dex)) {
             //put database code here
+            printf("I will update the database and take you to the map<br/>");
+            goto_map(name, str, intel, vit, agi, dex);
         }    
     }
     print_form(name, str, intel, vit, agi, dex);
 
     cgi_term();
     return 0;
+}
+
+void goto_map(char *name, int str, int intel, int vit, int agi, int dex)
+{
+    MYSQL mysql;
+    char *db_name = NULL;
+
+    if(mysql_init(&mysql)) {
+        if(!mysql_real_connect(&mysql, "localhost", USER, PASS, "db_mywebgame", 0, NULL, 0)) {
+            if(mysql_real_connect(&mysql, "localhost", USER, PASS, NULL, 0, NULL, 0)) {
+                if((db_name = create_db(&mysql, "db_mywebgame", 1))){
+                    printf("database: %s", db_name);
+                    mysql_real_connect(&mysql, "localhost", USER, PASS, "db_mywebgame", 0, NULL, 0);
+                    if(!mysql_query(&mysql, "CREATE TABLE player_table (name varchar(10), str int, intel int, vit int, agi int, dex int, level int, exp int);")){
+                        printf("<br/>table created");   
+                    }
+                }
+            }
+        }
+        //create save
+    }
 }
 
 void print_form(char *name, int str, int intel, int vit, int agi, int dex)
@@ -68,7 +96,7 @@ void print_form(char *name, int str, int intel, int vit, int agi, int dex)
             puts("<div class=\"form-group\">");
                 puts("<div class=\"row\">");
                     puts("<div class=\"col-md-offset-1 col-md-10\">");
-    if(!(10-str-intel-vit-agi-dex)) {
+    if(!(15-str-intel-vit-agi-dex)) {
                         puts("<button type=\"submit hidden\" name=\"mode\" value=\"s-up\" class=\"btn disabled\" disabled><span class=\"glyphicon glyphicon-chevron-up\"></span></button>");
     }
     else {
@@ -82,7 +110,7 @@ void print_form(char *name, int str, int intel, int vit, int agi, int dex)
                 puts("</div>");
                 puts("<div class=\"row\">");
                     puts("<div class=\"col-md-offset-1 col-md-10\">");
-    if(!str) {
+    if(!(str-1)) {
                         puts("<button type=\"submit hidden\" name=\"mode\" value=\"s-down\" class=\"btn disabled\" disabled><span class=\"glyphicon glyphicon-chevron-down\"></span></button>");
     }
     else {
@@ -94,7 +122,7 @@ void print_form(char *name, int str, int intel, int vit, int agi, int dex)
             puts("<div class=\"form-group\">");
                 puts("<div class=\"row\">");
                     puts("<div class=\"col-md-offset-1 col-md-10\">");
-    if(!(10-str-intel-vit-agi-dex)) {
+    if(!(15-str-intel-vit-agi-dex)) {
                         puts("<button type=\"submit hidden\" name=\"mode\" value=\"i-up\" class=\"btn disabled\" disabled><span class=\"glyphicon glyphicon-chevron-up\"></span></button>");
     }
     else {
@@ -108,7 +136,7 @@ void print_form(char *name, int str, int intel, int vit, int agi, int dex)
                 puts("</div>");
                 puts("<div class=\"row\">");
                     puts("<div class=\"col-md-offset-1 col-md-10\">");
-    if(!intel) {
+    if(!(intel-1)) {
                         puts("<button type=\"submit hidden\" name=\"mode\" value=\"i-down\" class=\"btn disabled\" disabled><span class=\"glyphicon glyphicon-chevron-down\"></span></button>");
     }
     else {
@@ -120,7 +148,7 @@ void print_form(char *name, int str, int intel, int vit, int agi, int dex)
             puts("<div class=\"form-group\">");
                 puts("<div class=\"row\">");
                     puts("<div class=\"col-md-offset-1 col-md-10\">");
-    if(!(10-str-intel-vit-agi-dex)) {
+    if(!(15-str-intel-vit-agi-dex)) {
                         puts("<button type=\"submit hidden\" name=\"mode\" value=\"v-up\" class=\"btn disabled\" disabled><span class=\"glyphicon glyphicon-chevron-up\"></span></button>");
     }
     else {
@@ -134,7 +162,7 @@ void print_form(char *name, int str, int intel, int vit, int agi, int dex)
                 puts("</div>");
                 puts("<div class=\"row\">");
                     puts("<div class=\"col-md-offset-1 col-md-10\">");
-    if(!vit) {
+    if(!(vit-1)) {
                         puts("<button type=\"submit hidden\" name=\"mode\" value=\"v-down\" class=\"btn disabled\" disabled><span class=\"glyphicon glyphicon-chevron-down\"></span></button>");
     }
     else {
@@ -146,7 +174,7 @@ void print_form(char *name, int str, int intel, int vit, int agi, int dex)
             puts("<div class=\"form-group\">");
                 puts("<div class=\"row\">");
                     puts("<div class=\"col-md-offset-1 col-md-10\">");
-    if(!(10-str-intel-vit-agi-dex)) {
+    if(!(15-str-intel-vit-agi-dex)) {
                         puts("<button type=\"submit hidden\" name=\"mode\" value=\"a-up\" class=\"btn disabled\" disabled><span class=\"glyphicon glyphicon-chevron-up\"></span></button>");
     }
     else {
@@ -160,7 +188,7 @@ void print_form(char *name, int str, int intel, int vit, int agi, int dex)
                 puts("</div>");
                 puts("<div class=\"row\">");
                     puts("<div class=\"col-md-offset-1 col-md-10\">");
-    if(!agi) {
+    if(!(agi-1)) {
                         puts("<button type=\"submit hidden\" name=\"mode\" value=\"a-down\" class=\"btn disabled\" disabled><span class=\"glyphicon glyphicon-chevron-down\"></span></button>");
     }
     else {
@@ -172,7 +200,7 @@ void print_form(char *name, int str, int intel, int vit, int agi, int dex)
             puts("<div class=\"form-group\">");
                 puts("<div class=\"row\">");
                     puts("<div class=\"col-md-offset-1 col-md-10\">");
-    if(!(10-str-intel-vit-agi-dex)) {
+    if(!(15-str-intel-vit-agi-dex)) {
                         puts("<button type=\"submit hidden\" name=\"mode\" value=\"d-up\" class=\"btn disabled\" disabled><span class=\"glyphicon glyphicon-chevron-up\"></span></button>");
     }
     else {
@@ -186,7 +214,7 @@ void print_form(char *name, int str, int intel, int vit, int agi, int dex)
                 puts("</div>");
                 puts("<div class=\"row\">");
                     puts("<div class=\"col-md-offset-1 col-md-10\">");
-    if(!dex) {
+    if(!(dex-1)) {
                         puts("<button type=\"submit hidden\" name=\"mode\" value=\"d-down\" class=\"btn disabled\" disabled><span class=\"glyphicon glyphicon-chevron-down\"></span></button>");
     }
     else {
@@ -196,11 +224,11 @@ void print_form(char *name, int str, int intel, int vit, int agi, int dex)
                 puts("</div>");
             puts("</div>");
             puts("<div class=\"row\">");
-                printf("<div class=\"col-md-offset-1 col-md-11\">%d stat point/s left</div>", (10-str-intel-vit-agi-dex));
+                printf("<div class=\"col-md-offset-1 col-md-11\">%d stat point/s left</div>", (15-str-intel-vit-agi-dex));
             puts("</div>");
             puts("<div class=\"form-group\">");
                 puts("<div class=\"control-label col-md-2\">");
-    if(10-str-intel-vit-agi-dex) {
+    if(15-str-intel-vit-agi-dex) {
                     puts("<button type=\"submit hidden\" name=\"mode\" value=\"g-go\" class=\"btn btn-default disabled\" disabled>Go</button>");
     }
     else {
