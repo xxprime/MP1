@@ -32,7 +32,7 @@ void print_menu()
                       puts("<h4 class \"list-group-item-heading\">How to Play</h4>");
                       puts("<p class=\"list-group-item-text\">Teaches you the basics of the game. It also teaches you how to win.</p>");
                   puts("</a>");
-                  puts("<a href=\"#\" class=\"list-group-item\">");
+                  puts("<a href=\"/cgi-bin/MP1/new_game.cgi\" class=\"list-group-item\">");
                       puts("<h4 class=\"list-group-item-heading\">New Game</h4>");
                       puts("<p class=\"list-group-item-text\">Create a brand new game. Start from scratch.</p>");
                   puts("</a>");
