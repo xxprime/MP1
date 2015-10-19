@@ -4,7 +4,7 @@
 #include "cgicustom.h"
 
 void print_form(char *name, int str, int intel, int vit, int agi, int dex);
-void update_stat(char* mode, int *str, int *intel, int *vit, int *agi, int *dex);
+int update_stat(char* mode, int *str, int *intel, int *vit, int *agi, int *dex);
 
 int main()
 {
@@ -16,7 +16,7 @@ int main()
     cgi_init("MP1 Title_newgame");
 
     if(getenv("CONTENT_LENGTH")) {
-        data = post_init(atoi(getenv("CONTENT_LENGTH")),1);
+        data = post_init(atoi(getenv("CONTENT_LENGTH")),0);
         strncpy(name,parse_data(data, "name", "multipart/form-data"),9);
         mode = parse_data(data, "mode", "multipart/form-data");
         str = atoi(parse_data(data, "str", "multipart/form-data"));
@@ -24,7 +24,9 @@ int main()
         vit = atoi(parse_data(data, "vit", "multipart/form-data"));
         agi = atoi(parse_data(data, "agi", "multipart/form-data"));
         dex = atoi(parse_data(data, "dex", "multipart/form-data"));
-        update_stat(mode, &str, &intel, &vit, &agi, &dex);    
+        if(update_stat(mode, &str, &intel, &vit, &agi, &dex)) {
+            //put database code here
+        }    
     }
     print_form(name, str, intel, vit, agi, dex);
 
@@ -66,7 +68,12 @@ void print_form(char *name, int str, int intel, int vit, int agi, int dex)
             puts("<div class=\"form-group\">");
                 puts("<div class=\"row\">");
                     puts("<div class=\"col-md-offset-1 col-md-10\">");
+    if(!(10-str-intel-vit-agi-dex)) {
+                        puts("<button type=\"submit hidden\" name=\"mode\" value=\"s-up\" class=\"btn disabled\" disabled><span class=\"glyphicon glyphicon-chevron-up\"></span></button>");
+    }
+    else {
                         puts("<button type=\"submit hidden\" name=\"mode\" value=\"s-up\" class=\"btn\"><span class=\"glyphicon glyphicon-chevron-up\"></span></button>");
+    }
                     puts("</div>");
                 puts("</div>");
                 puts("<div class=\"row\">");
@@ -75,14 +82,24 @@ void print_form(char *name, int str, int intel, int vit, int agi, int dex)
                 puts("</div>");
                 puts("<div class=\"row\">");
                     puts("<div class=\"col-md-offset-1 col-md-10\">");
+    if(!str) {
+                        puts("<button type=\"submit hidden\" name=\"mode\" value=\"s-down\" class=\"btn disabled\" disabled><span class=\"glyphicon glyphicon-chevron-down\"></span></button>");
+    }
+    else {
                         puts("<button type=\"submit hidden\" name=\"mode\" value=\"s-down\" class=\"btn\"><span class=\"glyphicon glyphicon-chevron-down\"></span></button>");
+    }
                     puts("</div>");
                 puts("</div>");
             puts("</div>");
             puts("<div class=\"form-group\">");
                 puts("<div class=\"row\">");
                     puts("<div class=\"col-md-offset-1 col-md-10\">");
+    if(!(10-str-intel-vit-agi-dex)) {
+                        puts("<button type=\"submit hidden\" name=\"mode\" value=\"i-up\" class=\"btn disabled\" disabled><span class=\"glyphicon glyphicon-chevron-up\"></span></button>");
+    }
+    else {
                         puts("<button type=\"submit hidden\" name=\"mode\" value=\"i-up\" class=\"btn\"><span class=\"glyphicon glyphicon-chevron-up\"></span></button>");
+    }
                     puts("</div>");
                 puts("</div>");
                 puts("<div class=\"row\">");
@@ -91,14 +108,24 @@ void print_form(char *name, int str, int intel, int vit, int agi, int dex)
                 puts("</div>");
                 puts("<div class=\"row\">");
                     puts("<div class=\"col-md-offset-1 col-md-10\">");
+    if(!intel) {
+                        puts("<button type=\"submit hidden\" name=\"mode\" value=\"i-down\" class=\"btn disabled\" disabled><span class=\"glyphicon glyphicon-chevron-down\"></span></button>");
+    }
+    else {
                         puts("<button type=\"submit hidden\" name=\"mode\" value=\"i-down\" class=\"btn\"><span class=\"glyphicon glyphicon-chevron-down\"></span></button>");
+    }
                     puts("</div>");
                 puts("</div>");
             puts("</div>");
             puts("<div class=\"form-group\">");
                 puts("<div class=\"row\">");
                     puts("<div class=\"col-md-offset-1 col-md-10\">");
+    if(!(10-str-intel-vit-agi-dex)) {
+                        puts("<button type=\"submit hidden\" name=\"mode\" value=\"v-up\" class=\"btn disabled\" disabled><span class=\"glyphicon glyphicon-chevron-up\"></span></button>");
+    }
+    else {
                         puts("<button type=\"submit hidden\" name=\"mode\" value=\"v-up\" class=\"btn\"><span class=\"glyphicon glyphicon-chevron-up\"></span></button>");
+    }
                     puts("</div>");
                 puts("</div>");
                 puts("<div class=\"row\">");
@@ -107,14 +134,24 @@ void print_form(char *name, int str, int intel, int vit, int agi, int dex)
                 puts("</div>");
                 puts("<div class=\"row\">");
                     puts("<div class=\"col-md-offset-1 col-md-10\">");
+    if(!vit) {
+                        puts("<button type=\"submit hidden\" name=\"mode\" value=\"v-down\" class=\"btn disabled\" disabled><span class=\"glyphicon glyphicon-chevron-down\"></span></button>");
+    }
+    else {
                         puts("<button type=\"submit hidden\" name=\"mode\" value=\"v-down\" class=\"btn\"><span class=\"glyphicon glyphicon-chevron-down\"></span></button>");
+    }
                     puts("</div>");
                 puts("</div>");
             puts("</div>");
             puts("<div class=\"form-group\">");
                 puts("<div class=\"row\">");
                     puts("<div class=\"col-md-offset-1 col-md-10\">");
+    if(!(10-str-intel-vit-agi-dex)) {
+                        puts("<button type=\"submit hidden\" name=\"mode\" value=\"a-up\" class=\"btn disabled\" disabled><span class=\"glyphicon glyphicon-chevron-up\"></span></button>");
+    }
+    else {
                         puts("<button type=\"submit hidden\" name=\"mode\" value=\"a-up\" class=\"btn\"><span class=\"glyphicon glyphicon-chevron-up\"></span></button>");
+    }
                     puts("</div>");
                 puts("</div>");
                 puts("<div class=\"row\">");
@@ -123,14 +160,24 @@ void print_form(char *name, int str, int intel, int vit, int agi, int dex)
                 puts("</div>");
                 puts("<div class=\"row\">");
                     puts("<div class=\"col-md-offset-1 col-md-10\">");
+    if(!agi) {
+                        puts("<button type=\"submit hidden\" name=\"mode\" value=\"a-down\" class=\"btn disabled\" disabled><span class=\"glyphicon glyphicon-chevron-down\"></span></button>");
+    }
+    else {
                         puts("<button type=\"submit hidden\" name=\"mode\" value=\"a-down\" class=\"btn\"><span class=\"glyphicon glyphicon-chevron-down\"></span></button>");
+    }
                     puts("</div>");
                 puts("</div>");
             puts("</div>");
             puts("<div class=\"form-group\">");
                 puts("<div class=\"row\">");
                     puts("<div class=\"col-md-offset-1 col-md-10\">");
+    if(!(10-str-intel-vit-agi-dex)) {
+                        puts("<button type=\"submit hidden\" name=\"mode\" value=\"d-up\" class=\"btn disabled\" disabled><span class=\"glyphicon glyphicon-chevron-up\"></span></button>");
+    }
+    else {
                         puts("<button type=\"submit hidden\" name=\"mode\" value=\"d-up\" class=\"btn\"><span class=\"glyphicon glyphicon-chevron-up\"></span></button>");
+    }
                     puts("</div>");
                 puts("</div>");
                 puts("<div class=\"row\">");
@@ -139,7 +186,12 @@ void print_form(char *name, int str, int intel, int vit, int agi, int dex)
                 puts("</div>");
                 puts("<div class=\"row\">");
                     puts("<div class=\"col-md-offset-1 col-md-10\">");
+    if(!dex) {
+                        puts("<button type=\"submit hidden\" name=\"mode\" value=\"d-down\" class=\"btn disabled\" disabled><span class=\"glyphicon glyphicon-chevron-down\"></span></button>");
+    }
+    else {
                         puts("<button type=\"submit hidden\" name=\"mode\" value=\"d-down\" class=\"btn\"><span class=\"glyphicon glyphicon-chevron-down\"></span></button>");
+    }
                     puts("</div>");
                 puts("</div>");
             puts("</div>");
@@ -160,7 +212,7 @@ void print_form(char *name, int str, int intel, int vit, int agi, int dex)
     puts("</div>");
 }
 
-void update_stat(char* mode, int *str, int *intel, int *vit, int *agi, int *dex)
+int update_stat(char* mode, int *str, int *intel, int *vit, int *agi, int *dex)
 {
     char stat = 'x';
     char change[5];
@@ -181,7 +233,8 @@ void update_stat(char* mode, int *str, int *intel, int *vit, int *agi, int *dex)
         case 'v': *vit = *vit + increment; break;
         case 'a': *agi = *agi + increment; break;
         case 'd': *dex = *dex + increment; break;
-        case 'g': break;
+        case 'g': return 1; break;
         default: break;
     }
+    return 0;
 }
