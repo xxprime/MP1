@@ -1,18 +1,28 @@
 #include <stdio.h>
 #include "cgicustom.h"
+#include <mysql/mysql.h>
+#define db_name "db_RPG"
 
 void print_menu();
 
 int main()
 {
 
-cgi_init("MP1 Title_menu");
+  cgi_init("MP1 Title_menu");
 
-print_menu();
+  /*CHECKS FOR DATABASE, CREATES DATABASE IF DATABASE IS NONEXISTENT (ALSO CREATES THE TABLES)*/
+  if(!cgi_mysql_check_db(db_name, 1)) {
+    if(cgi_mysql_create_db(db_name, 1)) {
+        cgi_mysql_statement(db_name, "CREATE TABLE Player(PlayerName varchar(10), PlayerLvl int, PlayerStr int, PlayerInt int, PlayerVit int, PlayerAgi int, PlayerDex int, PlayerExp int)", 1);
+        cgi_mysql_statement(db_name, "CREATE TABLE Monster(MonsterName varchar(10), MonsterLvl int, MonsterStr int, MonsterInt int, MonsterVit int, MonsterAgi int, MonsterDex int)", 1);
+    }
+  }
 
-cgi_term();
+  print_menu();
 
-return 0;
+  cgi_term();
+
+  return 0;
 }
 
 void print_menu()
