@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "/usr/include/mysql/mysql.h" //CHANGE THIS TO PROPER DIRECTORY
+#include <mysql/mysql.h> //CHANGE THIS TO PROPER DIRECTORY
 #include "cgicustom.h"
 
 #define USER "root"
@@ -43,23 +43,7 @@ int main()
 
 void goto_map(char *name, int str, int intel, int vit, int agi, int dex)
 {
-    MYSQL mysql;
-    char *db_name = NULL;
 
-    if(mysql_init(&mysql)) {
-        if(!mysql_real_connect(&mysql, "localhost", USER, PASS, "db_mywebgame", 0, NULL, 0)) {
-            if(mysql_real_connect(&mysql, "localhost", USER, PASS, NULL, 0, NULL, 0)) {
-                if((db_name = create_db(&mysql, "db_mywebgame", 1))){
-                    printf("database: %s", db_name);
-                    mysql_real_connect(&mysql, "localhost", USER, PASS, "db_mywebgame", 0, NULL, 0);
-                    if(!mysql_query(&mysql, "CREATE TABLE player_table (name varchar(10), str int, intel int, vit int, agi int, dex int, level int, exp int);")){
-                        printf("<br/>table created");   
-                    }
-                }
-            }
-        }
-        //create save
-    }
 }
 
 void print_form(char *name, int str, int intel, int vit, int agi, int dex)

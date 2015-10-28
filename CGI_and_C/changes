@@ -1,0 +1,5 @@
+change mysql directory from the ff files:
+cgi_mysql.c
+cgicustom.h
+main_menu.c
+new_game.c

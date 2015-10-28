@@ -1,7 +1,7 @@
 #ifndef cgicustom_H
 #define cgicustom_H
 
-#include "/usr/include/mysql/mysql.h" //CHANGE THIS TO PROPER DIRECTORY
+#include <mysql/mysql.h> //CHANGE THIS TO PROPER DIRECTORY
 
 void cgi_init(char *title);//
 void cgi_term(void);//

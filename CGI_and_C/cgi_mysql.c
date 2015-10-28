@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "/usr/include/mysql/mysql.h" //CHANGE THIS TO PROPER DIRECTORY
+
+#include <mysql/mysql.h> //CHANGE THIS TO PROPER DIRECTORY
 
 
 char *create_db(MYSQL *mysql, char *db_name, int flag)
