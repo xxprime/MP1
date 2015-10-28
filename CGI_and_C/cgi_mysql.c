@@ -63,7 +63,7 @@ char *cgi_mysql_create_db(char *db_name, int flag)
 	MYSQL mysql;
 
 	if(!mysql_init(&mysql) && flag) {
-		printf("create_table:ERROR %u (%s): %s<br/>", mysql_errno(&mysql), mysql_sqlstate(&mysql), mysql_error(&mysql));
+		printf("create_db:ERROR %u (%s): %s<br/>", mysql_errno(&mysql), mysql_sqlstate(&mysql), mysql_error(&mysql));
 	}
 
 	char *statement = NULL;
