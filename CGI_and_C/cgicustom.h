@@ -4,6 +4,8 @@
 #include <mysql/mysql.h> //CHANGE THIS TO PROPER DIRECTORY
 
 void cgi_init(char *title);//
+void cgi_init_beforecss(char *title);
+void cgi_init_aftercss();
 void cgi_term(void);//
 char* post_init(unsigned long int lenstr, int flag);//
 char* parse_data(char *data, char *key, char *enctype);//

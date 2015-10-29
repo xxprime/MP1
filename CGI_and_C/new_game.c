@@ -5,6 +5,7 @@
 #include "cgicustom.h"
 #define STATEMENT_LEN 100
 #define db_name "db_RPG"
+#define db_name_temp "db_RPG_temp"
 #define USER "root"
 #define PASS "root"
 
@@ -44,7 +45,7 @@ void goto_map(char *name, int str, int intel, int vit, int agi, int dex)
 {
     char statement[STATEMENT_LEN];
     sprintf(statement,"INSERT INTO Player VALUES(\"%s\", 1, %d, %d, %d, %d, %d, 0)", name, str, intel, vit, agi, dex);
-    cgi_mysql_statement(db_name,statement,1);
+    cgi_mysql_statement(db_name_temp,statement,1);
 }
 
 void print_form(char *name, int str, int intel, int vit, int agi, int dex)
@@ -53,7 +54,7 @@ void print_form(char *name, int str, int intel, int vit, int agi, int dex)
         puts("<h2>Create a new character</h2>");
         puts("<form class =\"form-horizontal\" role=\"form\" action=\"/cgi-bin/MP1/new_game.cgi\" method=\"post\" enctype=\"multipart/form-data\">");
             puts("<div class=\"form-group\">");
-                puts("<label class=\"control-label col-md-2\" for=\"name\">Name: </label>");
+                puts("<label class=\"control-label col-md-2\" for=\"name\">Name(9 chars only): </label>");
                 puts("<div class=\"col-md-4\">");
     if(name[0] != '\0') {
                     printf("<input type=\"text\" class=\"form-control\" id=\"name\" name=\"name\" value=\"%s\" required>", name);

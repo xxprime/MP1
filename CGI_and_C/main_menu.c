@@ -3,6 +3,7 @@
 #include "cgicustom.h"
 #include <mysql/mysql.h>
 #define db_name "db_RPG"
+#define db_name_temp "db_RPG_temp"
 
 void print_menu();
 
@@ -16,6 +17,13 @@ int main()
     if(cgi_mysql_create_db(db_name, 1)) {
         cgi_mysql_statement(db_name, "CREATE TABLE Player(PlayerName varchar(10), PlayerLvl int, PlayerStr int, PlayerInt int, PlayerVit int, PlayerAgi int, PlayerDex int, PlayerExp int)", 1);
         cgi_mysql_statement(db_name, "CREATE TABLE Monster(MonsterName varchar(10), MonsterLvl int, MonsterStr int, MonsterInt int, MonsterVit int, MonsterAgi int, MonsterDex int)", 1);
+    }
+  }
+
+  /*CHECKS FOR TEMP DATABASE, CREATES DATABASE IF DATABASE IS NONEXISTENT (ALSO CREATES THE TABLES)*/
+  if(!cgi_mysql_check_db(db_name_temp, 0)) {
+    if(cgi_mysql_create_db(db_name_temp, 1)) {
+        cgi_mysql_statement(db_name_temp, "CREATE TABLE Player(PlayerName varchar(10), PlayerLvl int, PlayerStr int, PlayerInt int, PlayerVit int, PlayerAgi int, PlayerDex int, PlayerExp int)", 1);
     }
   }
 
@@ -56,15 +64,15 @@ void print_menu()
 
 
                           puts("<ul class=\"dropdown-menu\">");
-                              puts("<form role=\"form\" action=\"#\" method=\"post\" enctype=\"multipart/form-data\">");
+                              puts("<form role=\"form\" action=\"/cgi-bin/MP1/map_handler.cgi\" method=\"post\" enctype=\"multipart/form-data\">");
                               if(cgi_mysql_getvalue(db_name, "Player", 1, 1, 1)) {
-                                printf("<li><button type=\"submit hidden\" name=\"PlayerName\" value=\"%s\" class=\"btn btn-default\">Name:%s Level:%d</button></li>", cgi_mysql_getvalue(db_name, "Player", 1, 1, 1), cgi_mysql_getvalue(db_name, "Player", 1, 1, 1), atoi(cgi_mysql_getvalue(db_name, "Player", 1, 2, 1)));
+                                printf("<li><button type=\"submit hidden\" name=\"name\" value=\"%s\" class=\"btn btn-default\">Name:%s Level:%d</button></li>", cgi_mysql_getvalue(db_name, "Player", 1, 1, 1), cgi_mysql_getvalue(db_name, "Player", 1, 1, 1), atoi(cgi_mysql_getvalue(db_name, "Player", 1, 2, 1)));
                               }
                               if(cgi_mysql_getvalue(db_name, "Player", 2, 1, 1)) {
-                                printf("<li><button type=\"submit hidden\" name=\"PlayerName\" value=\"%s\" class=\"btn btn-default\">Name:%s Level:%d</button></li>", cgi_mysql_getvalue(db_name, "Player", 2, 1, 1), cgi_mysql_getvalue(db_name, "Player", 2, 1, 1), atoi(cgi_mysql_getvalue(db_name, "Player", 2, 2, 1)));
+                                printf("<li><button type=\"submit hidden\" name=\"name\" value=\"%s\" class=\"btn btn-default\">Name:%s Level:%d</button></li>", cgi_mysql_getvalue(db_name, "Player", 2, 1, 1), cgi_mysql_getvalue(db_name, "Player", 2, 1, 1), atoi(cgi_mysql_getvalue(db_name, "Player", 2, 2, 1)));
                               }
                               if(cgi_mysql_getvalue(db_name, "Player", 3, 1, 1)) {
-                                printf("<li><button type=\"submit hidden\" name=\"PlayerName\" value=\"%s\" class=\"btn btn-default\">Name:%s Level:%d</button></li>", cgi_mysql_getvalue(db_name, "Player", 3, 1, 1), cgi_mysql_getvalue(db_name, "Player", 3, 1, 1), atoi(cgi_mysql_getvalue(db_name, "Player", 3, 2, 1)));
+                                printf("<li><button type=\"submit hidden\" name=\"name\" value=\"%s\" class=\"btn btn-default\">Name:%s Level:%d</button></li>", cgi_mysql_getvalue(db_name, "Player", 3, 1, 1), cgi_mysql_getvalue(db_name, "Player", 3, 1, 1), atoi(cgi_mysql_getvalue(db_name, "Player", 3, 2, 1)));
                               }
                               puts("</form>");
                           puts("</ul>");

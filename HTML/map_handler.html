@@ -20,9 +20,11 @@
       background-repeat: no-repeat;
       background-position: center;
     }
-    .sanic {
-      position: relative;
-      left: 76px;
+    .arrow {
+      width: 60%;
+      padding: 1%;
+      border: 2px solid gray;
+      margin: 2px;
     }
 	</style>
     </head>
@@ -36,13 +38,26 @@
 
 
     <div class="container">
-			<iframe name="result1" style="height:90px; width:65%"></iframe>
-			<iframe name="result2" style="height:90px; width:20%"></iframe>
-			<iframe name="result3" style="height:90px; width:10%"></iframe>
-      <hr>
-      <footer>
-        <p>&copy; 2014-01567_2014-30712</p>
-      </footer>
+      <div class="row">
+        <div class="col-md-7 arrow">
+          <form class="form-inline" role="form" action="/cgi-bin/MP1/map_handler.cgi" method="post" enctype="multipart/form-data">
+            <div class="form-group">
+              <input type="hidden" class="form-control" name="yprev" value="d">
+              <input type="hidden" class="form-control" name="xprev" value="d">
+              <button type="submit hidden" name="y" value"d" class="btn"><span class="glyphicon glyphicon-arrow-up"></span></button>
+              <button type="submit hidden" name="y" value"d" class="btn"><span class="glyphicon glyphicon-arrow-down"></span></button>
+              <button type="submit hidden" name="x" value"d" class="btn"><span class="glyphicon glyphicon-arrow-left"></span></button>
+              <button type="submit hidden" name="x" value"d" class="btn"><span class="glyphicon glyphicon-arrow-right"></span></button>
+            </div>
+          </form>
+        </div>
+			   <iframe name="result2" style="height:90px; width:20%"></iframe>
+			   <iframe name="result3" style="height:90px; width:10%"></iframe>
+        <hr>
+        <footer>
+          <p>&copy; 2014-01567_2014-30712</p>
+        </footer>
+      </div>
     </div>
 
 
