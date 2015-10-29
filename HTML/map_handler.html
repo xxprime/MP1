@@ -2,29 +2,17 @@
 <html lang="en">
     <head>
     <meta charset="UTF-8">
-    <!-- TITLE -->  
     <title>MP1 Title_index</title>
-    <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="bootstrap-3.3.5-dist/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="bootstrap-3.3.5-dist/css/bootstrap-theme.min.css">
 
 	<style>
-		*{
+		* {
 			box-sizing: border-box;
-	  	} 
-		.col { 
-			height: 70px;
-			width: 50%;
-		  	background: white;
-    		border: 1px solid black;
-		  	text-align: center; 
-		} 
-		.row { 
-			padding: 0% 0% 0% 0%;
-		}
+	  } 
     .map {
       width: 100%;
-      height:512px;
+      height:600px;
       padding: 1%;
       border: 5px solid gray;
       margin: 0;
@@ -32,34 +20,33 @@
       background-repeat: no-repeat;
       background-position: center;
     }
+    .sanic {
+      position: relative;
+      left: 76px;
+    }
 	</style>
     </head>
 
   <body>
-    <!-- Main jumbotron for a primary marketing message or call to action -->
-    <div class="jumbotron map">
-      <div class="container">
+    <div class="container map">
+      <div style="position: relative; left: 1039px; top: 504px">
+        <img src="../Images/mlg_sanic.png" alt="SANIC" height="77", width"116">
       </div>
     </div>
 
+
     <div class="container">
-
-
-			<iframe name="result" style="height:30%; width:65%"></iframe>
-			<iframe name="result2" style="height:30%; width:20%"></iframe>
-			<iframe name="result" style="height:30%; width:10%"></iframe>
-      
+			<iframe name="result1" style="height:90px; width:65%"></iframe>
+			<iframe name="result2" style="height:90px; width:20%"></iframe>
+			<iframe name="result3" style="height:90px; width:10%"></iframe>
       <hr>
-
       <footer>
         <p>&copy; 2014-01567_2014-30712</p>
       </footer>
-    </div> <!-- /container -->
+    </div>
 
 
-    <!---->
     <script src="bootstrap-3.3.5-dist/js/jquery.min.js"></script>     
-    <!---->
     <script src="bootstrap-3.3.5-dist/js/bootstrap.min.js"></script>
     </body>
 </html>
