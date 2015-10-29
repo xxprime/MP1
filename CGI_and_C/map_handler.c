@@ -16,7 +16,7 @@ void print_arrows(int flag, coordinate_t pos);
 
 int main()
 {
-	int spawn = 0;
+	int spawn = 0, increment = 0;
     char name[10]={'\0'};
     char *data = NULL;
     coordinate_t prev;
@@ -31,14 +31,32 @@ int main()
 	if(getenv("CONTENT_LENGTH")) {
         data = post_init(atoi(getenv("CONTENT_LENGTH")),0);
         strncpy(name,parse_data(data, "name", "multipart/form-data"),9);
+        if(parse_data(data, "xprev", "multipart/form-data")) {
+        	prev.x = atoi(parse_data(data, "xprev", "multipart/form-data"));
+        }
+        if(parse_data(data, "yprev", "multipart/form-data")) {
+        	prev.y = atoi(parse_data(data, "yprev", "multipart/form-data"));
+        }
+
         if(parse_data(data, "ihat", "multipart/form-data")) {
-  
-        	pos.x = atoi(parse_data(data, "ihat", "multipart/form-data")) + atoi(parse_data(data, "xprev", "multipart/form-data"));
-        	pos.y = atoi(parse_data(data, "yprev", "multipart/form-data"));
+        	increment = atoi(parse_data(data, "ihat", "multipart/form-data"));
+        	if((prev.x == 1 && increment == -1)|| (prev.x == 9 && increment == 1)) {
+        		pos.x = prev.x;
+        	}
+        	else {
+        		pos.x = increment + prev.x;
+        	}
+        	pos.y = prev.y;
         }
         else if(parse_data(data, "jhat", "multipart/form-data")) {
-        	pos.y = atoi(parse_data(data, "jhat", "multipart/form-data")) + atoi(parse_data(data, "yprev", "multipart/form-data"));
-        	pos.x = atoi(parse_data(data, "xprev", "multipart/form-data"));
+        	increment = atoi(parse_data(data, "jhat", "multipart/form-data"));
+        	if((prev.y == 1 && increment == -1)|| (prev.y == 9 && increment == 1)) {
+        		pos.y = prev.y;
+        	}
+        	else {
+        		pos.y = increment + prev.y;
+        	}
+        	pos.x = prev.x;
         }
     }
 
@@ -91,7 +109,7 @@ void print_arrows(int flag, coordinate_t pos)
 void print_map(coordinate_t pos)
 {
     puts("<div class=\"container map\">");
-      printf("<div style=\"position: relative; left: %dpx; top: %dpx\">",(76+107*(pos.x)),(56*(pos.y)));
+      printf("<div style=\"position: relative; left: %dpx; top: %dpx\">",(107*(pos.x)),(56*(pos.y)));
         puts("<img src=\"/MP1/Images/mlg_sanic.png\" alt=\"SANIC\" height=\"77\", width\"116\">");
       puts("</div>");
     puts("</div>");
@@ -110,7 +128,7 @@ void print_css()
       	puts("height:600px;");
       	puts("padding: 1%%;");
 		puts("border: 5px solid gray;");
-		puts("margin: 0;");
+		puts("margin-left: 25px;");
 		puts("background-image: url(/MP1/Images/map_bg.jpg);");
 		puts("background-repeat: no-repeat;");
 		puts("background-position: center;");
