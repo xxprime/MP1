@@ -6,6 +6,7 @@
 #define PASS "root"
 
 
+
 int cgi_mysql_check_db(char *db_name, int flag)
 {
 	MYSQL mysql;
@@ -35,20 +36,20 @@ int cgi_mysql_statement(char* db_name, char *statement, int flag)
 	MYSQL mysql;
 
 	if(!mysql_init(&mysql) && flag) {
-		printf("create_table:ERROR %u (%s): %s<br/>", mysql_errno(&mysql), mysql_sqlstate(&mysql), mysql_error(&mysql));
+		printf("statement:ERROR %u (%s): %s<br/>", mysql_errno(&mysql), mysql_sqlstate(&mysql), mysql_error(&mysql));
 	}
 
 	if(mysql_real_connect(&mysql, "localhost", "root", PASS, db_name, 0, NULL, 0)) {
 		if(mysql_query(&mysql, statement)) {
 			if(flag){	
-        		printf("create_table:ERROR %u (%s): %s<br/>", mysql_errno(&mysql), mysql_sqlstate(&mysql), mysql_error(&mysql));
+        		printf("statement:ERROR %u (%s): %s<br/>", mysql_errno(&mysql), mysql_sqlstate(&mysql), mysql_error(&mysql));
         	}
         }
 	}
 
 	else {
 		if(flag) {
-			printf("create_table:ERROR %u (%s): %s<br/>", mysql_errno(&mysql), mysql_sqlstate(&mysql), mysql_error(&mysql));
+			printf("statement:ERROR %u (%s): %s<br/>", mysql_errno(&mysql), mysql_sqlstate(&mysql), mysql_error(&mysql));
 		}
 		mysql_close(&mysql);
 		return 0;

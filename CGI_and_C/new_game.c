@@ -3,7 +3,8 @@
 #include <string.h>
 #include <mysql/mysql.h> //CHANGE THIS TO PROPER DIRECTORY
 #include "cgicustom.h"
-
+#define STATEMENT_LEN 100
+#define db_name "db_RPG"
 #define USER "root"
 #define PASS "root"
 
@@ -30,7 +31,6 @@ int main()
         agi = atoi(parse_data(data, "agi", "multipart/form-data"));
         dex = atoi(parse_data(data, "dex", "multipart/form-data"));
         if(update_stat(mode, &str, &intel, &vit, &agi, &dex)) {
-            //put database code here
             printf("I will update the database and take you to the map<br/>");
             goto_map(name, str, intel, vit, agi, dex);
         }    
@@ -43,14 +43,16 @@ int main()
 
 void goto_map(char *name, int str, int intel, int vit, int agi, int dex)
 {
-
+    char statement[STATEMENT_LEN];
+    sprintf(statement,"INSERT INTO Player VALUES(\"%s\", 1, %d, %d, %d, %d, %d, 0)", name, str, intel, vit, agi, dex);
+    cgi_mysql_statement(db_name,statement,1);
 }
 
 void print_form(char *name, int str, int intel, int vit, int agi, int dex)
 {
     puts("<div class=\"container\">");
         puts("<h2>Create a new character</h2>");
-        puts("<form class =\"form-horizontal\" role=\"form\" action=\"/cgi-bin/MP1/new_game.cgi\" method=\"post\" enctype=\"multipart/form-data\">");
+        puts("<form class =\"form-horizontal\" role=\"form\" action=\"/cgi-bin/MP1/CGI_and_C/new_game.cgi\" method=\"post\" enctype=\"multipart/form-data\">");
             puts("<div class=\"form-group\">");
                 puts("<label class=\"control-label col-md-2\" for=\"name\">Name: </label>");
                 puts("<div class=\"col-md-4\">");
