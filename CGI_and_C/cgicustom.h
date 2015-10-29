@@ -10,6 +10,7 @@ char* parse_data(char *data, char *key, char *enctype);//
 void load(char** line, char** input);
 
 //SQL
+char *cgi_mysql_getvalue(char *db_name, char *table_name, int row, int column, int flag);
 int cgi_mysql_check_db(char *db_name, int flag);
 int cgi_mysql_statement(char* db_name, char *statement, int flag);
 char *cgi_mysql_create_db(char *db_name, int flag);

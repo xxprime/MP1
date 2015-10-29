@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "cgicustom.h"
 #include <mysql/mysql.h>
 #define db_name "db_RPG"
@@ -42,14 +43,35 @@ void print_menu()
                       puts("<h4 class \"list-group-item-heading\">How to Play</h4>");
                       puts("<p class=\"list-group-item-text\">Teaches you the basics of the game. It also teaches you how to win.</p>");
                   puts("</a>");
-                  puts("<a href=\"/cgi-bin/MP1/CGI_and_C/new_game.cgi\" class=\"list-group-item\">");
+                  puts("<a href=\"/cgi-bin/MP1/new_game.cgi\" class=\"list-group-item\">");
                       puts("<h4 class=\"list-group-item-heading\">New Game</h4>");
                       puts("<p class=\"list-group-item-text\">Create a brand new game. Start from scratch.</p>");
                   puts("</a>");
-                  puts("<a href=\"#\" class=\"list-group-item\">");
-                      puts("<h4 class=\"list-group-item-heading\">Load Game</h4>");
-                      puts("<p class=\"list-group-item-text\">Load a saved game. Continue your adventure.</p>");
-                  puts("</a>");
+                  puts("<div class=\"list-group-item\">");
+                      puts("<div class=\"dropdown\">");
+                          puts("<button class=\"btn dropdown-toggle\" type=\"button\" data-toggle=\"dropdown\">");
+                              puts("<h4 class=\"list-group-item-heading text-left\">Load Game</h4>");
+                              puts("<p class=\"list-group-item-text\">Load a saved game. Continue your adventure.</p>");
+                          puts("</button>");
+
+
+                          puts("<ul class=\"dropdown-menu\">");
+                              puts("<form role=\"form\" action=\"#\" method=\"post\" enctype=\"multipart/form-data\">");
+                              if(cgi_mysql_getvalue(db_name, "Player", 1, 1, 1)) {
+                                printf("<li><button type=\"submit hidden\" name=\"PlayerName\" value=\"%s\" class=\"btn btn-default\">Name:%s Level:%d</button></li>", cgi_mysql_getvalue(db_name, "Player", 1, 1, 1), cgi_mysql_getvalue(db_name, "Player", 1, 1, 1), atoi(cgi_mysql_getvalue(db_name, "Player", 1, 2, 1)));
+                              }
+                              if(cgi_mysql_getvalue(db_name, "Player", 2, 1, 1)) {
+                                printf("<li><button type=\"submit hidden\" name=\"PlayerName\" value=\"%s\" class=\"btn btn-default\">Name:%s Level:%d</button></li>", cgi_mysql_getvalue(db_name, "Player", 2, 1, 1), cgi_mysql_getvalue(db_name, "Player", 2, 1, 1), atoi(cgi_mysql_getvalue(db_name, "Player", 2, 2, 1)));
+                              }
+                              if(cgi_mysql_getvalue(db_name, "Player", 3, 1, 1)) {
+                                printf("<li><button type=\"submit hidden\" name=\"PlayerName\" value=\"%s\" class=\"btn btn-default\">Name:%s Level:%d</button></li>", cgi_mysql_getvalue(db_name, "Player", 3, 1, 1), cgi_mysql_getvalue(db_name, "Player", 3, 1, 1), atoi(cgi_mysql_getvalue(db_name, "Player", 3, 2, 1)));
+                              }
+                              puts("</form>");
+                          puts("</ul>");
+
+
+                      puts("</div>");
+                  puts("</div>");
               puts("</div>");
           puts("</div>");
       puts("</div>");

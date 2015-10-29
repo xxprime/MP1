@@ -45,14 +45,13 @@ void goto_map(char *name, int str, int intel, int vit, int agi, int dex)
     char statement[STATEMENT_LEN];
     sprintf(statement,"INSERT INTO Player VALUES(\"%s\", 1, %d, %d, %d, %d, %d, 0)", name, str, intel, vit, agi, dex);
     cgi_mysql_statement(db_name,statement,1);
-    puts("<META http-equiv=\"refresh\" content=\"0;URL=/MP1/HTML/map_handler.html\">");
 }
 
 void print_form(char *name, int str, int intel, int vit, int agi, int dex)
 {
     puts("<div class=\"container\">");
         puts("<h2>Create a new character</h2>");
-        puts("<form class =\"form-horizontal\" role=\"form\" action=\"/cgi-bin/MP1/CGI_and_C/new_game.cgi\" method=\"post\" enctype=\"multipart/form-data\">");
+        puts("<form class =\"form-horizontal\" role=\"form\" action=\"/cgi-bin/MP1/new_game.cgi\" method=\"post\" enctype=\"multipart/form-data\">");
             puts("<div class=\"form-group\">");
                 puts("<label class=\"control-label col-md-2\" for=\"name\">Name: </label>");
                 puts("<div class=\"col-md-4\">");
