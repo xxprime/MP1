@@ -31,7 +31,6 @@ int main()
         agi = atoi(parse_data(data, "agi", "multipart/form-data"));
         dex = atoi(parse_data(data, "dex", "multipart/form-data"));
         if(update_stat(mode, &str, &intel, &vit, &agi, &dex)) {
-            printf("I will update the database and take you to the map<br/>");
             goto_map(name, str, intel, vit, agi, dex);
         }    
     }
@@ -46,6 +45,7 @@ void goto_map(char *name, int str, int intel, int vit, int agi, int dex)
     char statement[STATEMENT_LEN];
     sprintf(statement,"INSERT INTO Player VALUES(\"%s\", 1, %d, %d, %d, %d, %d, 0)", name, str, intel, vit, agi, dex);
     cgi_mysql_statement(db_name,statement,1);
+    puts("<META http-equiv=\"refresh\" content=\"0;URL=/MP1/HTML/map_handler.html\">");
 }
 
 void print_form(char *name, int str, int intel, int vit, int agi, int dex)

@@ -11,7 +11,7 @@ int main()
   cgi_init("MP1 Title_menu");
 
   /*CHECKS FOR DATABASE, CREATES DATABASE IF DATABASE IS NONEXISTENT (ALSO CREATES THE TABLES)*/
-  if(!cgi_mysql_check_db(db_name, 1)) {
+  if(!cgi_mysql_check_db(db_name, 0)) {
     if(cgi_mysql_create_db(db_name, 1)) {
         cgi_mysql_statement(db_name, "CREATE TABLE Player(PlayerName varchar(10), PlayerLvl int, PlayerStr int, PlayerInt int, PlayerVit int, PlayerAgi int, PlayerDex int, PlayerExp int)", 1);
         cgi_mysql_statement(db_name, "CREATE TABLE Monster(MonsterName varchar(10), MonsterLvl int, MonsterStr int, MonsterInt int, MonsterVit int, MonsterAgi int, MonsterDex int)", 1);
