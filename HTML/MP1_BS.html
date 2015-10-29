@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <meta charset="UTF-8">  
+    <title>MP1 Title_index</title>
+    <link rel="stylesheet" type="text/css" href="bootstrap-3.3.5-dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="bootstrap-3.3.5-dist/css/bootstrap-theme.min.css">
+		<style>
+			*{
+				box-sizing: border-box;
+		  } 
+			.col{ 
+				height: 70px;
+				width: 50%;
+			  background: white;
+        border: 1px solid black;
+			  text-align: center; 
+			} 
+			.colinv{ 
+				height: 70px;
+				width: 50%;
+			  text-align: center; 
+			} 
+			.row { 
+				padding: 0% 0% 0% 0%;
+			}
+			.btn-xlarge{
+    		padding: 18px 28px;
+    		font-size: 30px; //change this to your desired size
+    		line-height: normal;
+    		webkit-border-radius: 8px;
+       	moz-border-radius: 8px;
+        border-radius: 8px;
+			}
+		</style>
+    </head>
+  <body>
+      <div class="container" style="background: url(../Images/bssamplebg4.jpg) no-repeat; margin-top: 5%;">
+				<div class="row" style="margin-right: 1%">
+    			<div class="col-md-1 colinv">
+						<iframe name="result2" style="height:100%; width:100%;"></iframe>
+					</div>
+					<div class="col-md-1 colinv">
+						<iframe name="result2" style="height:100%; width:100%;"></iframe>
+					</div>
+  			</div>
+				<div class="row" style="margin-bottom: 20%">
+    			<div class="col-md-1 colinv" style="margin-top: 5%">
+						<img src="http://placehold.it/350x150">
+					</div>
+					<div class="col-md-1 colinv" style="margin-top: 5%">
+						<img src="http://placehold.it/350x150">
+					</div>
+  			</div>
+      </div>
+    </div>
+    <div class="container">
+			<form>
+            <div class="row" data-toggle="buttons">
+                <label class="btn btn-xlarge" style="margin-bottom: 180px;">
+                    <input type="radio" name="action" value="atkbat" /> Attack
+                </label> 
+                <label class="btn btn-xlarge" style="margin-bottom: 180px;">
+                    <input type="radio" name="action" value="defbat" /> Defend
+                </label> 
+                <label class="btn btn-xlarge" style="margin-bottom: 180px;">
+                    <input type="radio" name="action" value="skill" /> Skill
+                </label> 
+                <label class="btn btn-xlarge active" style="margin-bottom: 180px;">
+                    <input type="radio" name="action" checked="checked" value="run" /> Run 
+                </label>
+                <label class="btn btn-xlarge" style="margin-bottom: 180px;">
+                    <input type="submit" name="commit" value="Go" /> 
+                </label>								
+								<iframe name="combat_log" style="height:20%; width:25%;"></iframe>
+								<iframe name="saveexit" style="height:20%; width:15%;"></iframe>
+            </div>
+			</form>
+    <script src="bootstrap-3.3.5-dist/js/jquery.min.js"></script>     
+    <script src="bootstrap-3.3.5-dist/js/bootstrap.min.js"></script>
+   </body>
+</html>
