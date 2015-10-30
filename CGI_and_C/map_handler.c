@@ -4,6 +4,7 @@
 #include <mysql/mysql.h> //CHANGE THIS TO PROPER DIRECTORY
 #include "cgicustom.h"
 #include "randomizer.h"
+#include "stats.h"
 #define STATEMENT_LEN 100
 #define db_name "db_RPG"
 #define db_name_temp "db_RPG_temp"
@@ -15,6 +16,7 @@ void print_map(coordinate_t pos);
 void print_arrows(int flag, coordinate_t pos, char *name);
 void save_state(char *playerName, char *saveName);
 void loadto_temp(char *playerName);
+int fightorflight(int flag);
 
 int main()
 {
@@ -23,7 +25,7 @@ int main()
 	print_css();
 	cgi_init_aftercss();
 
-	int spawn = 0, increment = 0, same = 0;
+	int increment = 0, same = 0, success = 0;
     char name[10]={'\0'};
     char *data = NULL;
     coordinate_t prev;
@@ -78,6 +80,10 @@ int main()
         	save_state(name,parse_data(data,"sname","multipart/form-data"));
         	same = 1;
         }
+        if(parse_data(data, "Fight", "multipart/form-data")) {
+        	success = fightorflight(atoi(parse_data(data, "Fight", "multipart/form-data")));
+        	printf("SUCCESS: %d", success);
+        }
         free(data);
     }
 
@@ -86,16 +92,11 @@ int main()
     	loadto_temp(name);
     }
 
-    if((prev.x == 0 && prev.y == 0) || same == 1) {
-    	spawn = 0;
-    }
-
-    else {
-    	spawn = 1;
-    }
-
     print_map(pos);
-    if(!rand_spawn(30) || !spawn) {
+    if(success) {
+    	print_arrows(-1, pos, name);
+    }
+    else if(!rand_spawn(50) || (prev.x == 0 && prev.y == 0) || same == 1) {
     	print_arrows(1, pos, name);
     }
     else {
@@ -103,6 +104,37 @@ int main()
     }
 
 	cgi_term();
+	return 0;
+}
+
+int fightorflight(int flag)
+{
+	int agi = 0;
+	int t_level, s_level;
+	char statement[STATEMENT_LEN];
+
+
+	s_level = atoi(cgi_mysql_getvalue(db_name_temp, "Player", 1, 2, 1));
+	t_level = rand_monster_lvl(s_level);
+
+	cgi_mysql_statement(db_name, "TRUNCATE TABLE Monster", 1);
+	if(flag) {
+		agi = atoi(cgi_mysql_getvalue(db_name_temp, "Player", 1, 6, 1));
+		printf("%d, %d, %d", agi, s_level, t_level);
+		if(flee_success(agi, s_level, t_level)) {
+			return 1;
+		}
+		else {
+			sprintf(statement,"INSERT INTO Monster VALUES(\"%s\", %d, 1)", "DRK SANIC", t_level);
+			//cgi_mysql_statement(db_name, statement, 1);
+			return 0;
+		}
+	}
+	else {
+		sprintf(statement,"INSERT INTO Monster VALUES(\"%s\", %d, 0)", "DRK SANIC", t_level);
+		//cgi_mysql_statement(db_name, statement, 1);
+		return 0;
+	}
 	return 0;
 }
 
@@ -162,7 +194,7 @@ void save_state(char *playerName, char* saveName)
 
 void print_arrows(int flag, coordinate_t pos, char *name)
 {
-	if(flag) {
+	if(flag == 1) {
 	    puts("<div class=\"container\">");
 	      	puts("<div class=\"row\">");
 		        puts("<div class=\"container arrow\">");
@@ -209,8 +241,62 @@ void print_arrows(int flag, coordinate_t pos, char *name)
 							puts("</form>");
 						puts("</ul>");
 					puts("</div>");
+					puts("<a href=\"/cgi-bin/MP1/main_menu.cgi\">EXIT</a>");
 				puts("</div>");
 			puts("<iframe name=\"result\" style=\"height:90px; width:30%%\"></iframe>");
+			puts("</div>");
+	    puts("</div>");
+	}
+	else if(flag == -1) {
+	    puts("<div class=\"container\">");
+	      	puts("<div class=\"row\">");
+		        puts("<div class=\"container arrow\">");
+					puts("<form class=\"form-inline\" role=\"form\" action=\"/cgi-bin/MP1/map_handler.cgi\" method=\"post\" enctype=\"multipart/form-data\">");
+					    puts("<div class=\"form-group\">");
+					    	printf("<input type=\"hidden\" class=\"form-control\" name=\"name\" value=\"%s\">",name);
+							printf("<input type=\"hidden\" class=\"form-control\" name=\"yprev\" value=\"%d\">",pos.y);
+							printf("<input type=\"hidden\" class=\"form-control\" name=\"xprev\" value=\"%d\">",pos.x);
+							puts("<button type=\"submit hidden\" name=\"jhat\" value=\"-1\" class=\"btn\"><span class=\"glyphicon glyphicon-arrow-up\"></span></button>");
+							puts("<button type=\"submit hidden\" name=\"jhat\" value=\"1\" class=\"btn\"><span class=\"glyphicon glyphicon-arrow-down\"></span></button>");
+							puts("<button type=\"submit hidden\" name=\"ihat\" value=\"1\" class=\"btn\"><span class=\"glyphicon glyphicon-arrow-right\"></span></button>");
+							puts("<button type=\"submit hidden\" name=\"ihat\" value=\"-1\" class=\"btn\"><span class=\"glyphicon glyphicon-arrow-left\"></span></button>");
+					    puts("</div>");
+					puts("</form>");
+	        	puts("</div>");
+		        puts("<div class=\"col-md-7 arrow\">");
+					puts("<div class=\"dropdown\">");
+						puts("<button class=\"btn dropdown-toggle\" type=\"button\" data-toggle=\"dropdown\">");
+							puts("<h4 class=\"list-group-item-heading text-left\">Save Game</h4>");
+						puts("</button>");
+						puts("<ul class=\"dropdown-menu\">");
+							puts("<form role=\"form\" action=\"/cgi-bin/MP1/map_handler.cgi\" method=\"post\" enctype=\"multipart/form-data\">");
+								printf("<input type=\"hidden\" class=\"form-control\" name=\"name\" value=\"%s\">",name);
+								printf("<input type=\"hidden\" class=\"form-control\" name=\"yprev\" value=\"%d\">",pos.y);
+								printf("<input type=\"hidden\" class=\"form-control\" name=\"xprev\" value=\"%d\">",pos.x);
+								if(cgi_mysql_getvalue(db_name, "Player", 1, 1, 1)) {
+									printf("<li><button type=\"submit hidden\" name=\"sname\" value=\"%s\" class=\"btn btn-default\">Name:%s Level:%d</button></li>", cgi_mysql_getvalue(db_name, "Player", 1, 1, 1), cgi_mysql_getvalue(db_name, "Player", 1, 1, 1), atoi(cgi_mysql_getvalue(db_name, "Player", 1, 2, 1)));
+								}
+								else {
+									printf("<li><button type=\"submit hidden\" name=\"sname\" value=\"empty_save_state\" class=\"btn btn-default\">empty_save_state</button></li>");
+								}
+								if(cgi_mysql_getvalue(db_name, "Player", 2, 1, 1)) {
+									printf("<li><button type=\"submit hidden\" name=\"sname\" value=\"%s\" class=\"btn btn-default\">Name:%s Level:%d</button></li>", cgi_mysql_getvalue(db_name, "Player", 2, 1, 1), cgi_mysql_getvalue(db_name, "Player", 2, 1, 1), atoi(cgi_mysql_getvalue(db_name, "Player", 2, 2, 1)));
+								}
+								else {
+									printf("<li><button type=\"submit hidden\" name=\"sname\" value=\"empty_save_state\" class=\"btn btn-default\">empty_save_state</button></li>");
+								}
+								if(cgi_mysql_getvalue(db_name, "Player", 3, 1, 1)) {
+									printf("<li><button type=\"submit hidden\" name=\"sname\" value=\"%s\" class=\"btn btn-default\">Name:%s Level:%d</button></li>", cgi_mysql_getvalue(db_name, "Player", 3, 1, 1), cgi_mysql_getvalue(db_name, "Player", 3, 1, 1), atoi(cgi_mysql_getvalue(db_name, "Player", 3, 2, 1)));
+								}
+								else {
+									printf("<li><button type=\"submit hidden\" name=\"sname\" value=\"empty_save_state\" class=\"btn btn-default\">empty_save_state</button></li>");
+								}
+							puts("</form>");
+						puts("</ul>");
+					puts("</div>");
+					puts("<a href=\"/cgi-bin/MP1/main_menu.cgi\">EXIT</a>");
+				puts("</div>");
+			puts("<iframe name=\"result\" src=\"/MP1/iframesuccess.html\" style=\"height:90px; width:30%%\"></iframe>");
 			puts("</div>");
 	    puts("</div>");
 	}
@@ -234,11 +320,12 @@ void print_arrows(int flag, coordinate_t pos, char *name)
 					    	printf("<input type=\"hidden\" class=\"form-control\" name=\"name\" value=\"%s\">",name);
 							printf("<input type=\"hidden\" class=\"form-control\" name=\"yprev\" value=\"%d\">",pos.y);
 							printf("<input type=\"hidden\" class=\"form-control\" name=\"xprev\" value=\"%d\">",pos.x);
-							puts("<button type=\"submit hidden\" name=\"Fight\" value=\"1\" class=\"btn\"><span class=\"glyphicon glyphicon-eye-open\">Fight</span></button>");
-							puts("<button type=\"submit hidden\" name=\"Flight\" value=\"1\" class=\"btn\"><span class=\"glyphicon glyphicon-eye-close\"></span>Flight</button>");
+							puts("<button type=\"submit hidden\" name=\"Fight\" value=\"0\" class=\"btn\"><span class=\"glyphicon glyphicon-eye-open\">Fight</span></button>");
+							puts("<button type=\"submit hidden\" name=\"Fight\" value=\"1\" class=\"btn\"><span class=\"glyphicon glyphicon-eye-close\"></span>Flight</button>");
 					    puts("</div>");
 					puts("</form>");
 	        	puts("</div>");
+	        	puts("<a href=\"/cgi-bin/MP1/main_menu.cgi\">EXIT</a>");
 			puts("<iframe name=\"result\" src=\"/MP1/iframe.html\" style=\"height:90px; width:100%%\"></iframe>");
 			puts("</div>");
 	    puts("</div>");
