@@ -246,7 +246,7 @@ void print_arrows(int flag, coordinate_t pos, char *name)
 							puts("</form>");
 						puts("</ul>");
 					puts("</div>");
-					puts("<a href=\"/cgi-bin/MP1/main_menu.cgi\">EXIT</a>");
+					puts("<a href=\"/cgi-bin/MP1/main_menu.cgi\">EXIT GAME</a>");
 				puts("</div>");
 			puts("<iframe name=\"result\" style=\"height:90px; width:30%%\"></iframe>");
 			puts("</div>");
@@ -299,7 +299,7 @@ void print_arrows(int flag, coordinate_t pos, char *name)
 							puts("</form>");
 						puts("</ul>");
 					puts("</div>");
-					puts("<a href=\"/cgi-bin/MP1/main_menu.cgi\">EXIT</a>");
+					puts("<a href=\"/cgi-bin/MP1/main_menu.cgi\">EXIT GAME</a>");
 				puts("</div>");
 			puts("<iframe name=\"result\" src=\"/MP1/iframesuccess.html\" style=\"height:90px; width:30%%\"></iframe>");
 			puts("</div>");
@@ -330,7 +330,7 @@ void print_arrows(int flag, coordinate_t pos, char *name)
 					    puts("</div>");
 					puts("</form>");
 	        	puts("</div>");
-	        	puts("<a href=\"/cgi-bin/MP1/main_menu.cgi\">EXIT</a>");
+	        	puts("<a href=\"/cgi-bin/MP1/main_menu.cgi\">EXIT GAME</a>");
 			puts("<iframe name=\"result\" src=\"/MP1/iframe.html\" style=\"height:90px; width:100%%\"></iframe>");
 			puts("</div>");
 	    puts("</div>");

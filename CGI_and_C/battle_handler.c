@@ -67,7 +67,7 @@ int resolve_action(char *action)
     		}
 
     		//PLAYER'S TURN
-    		if(hit_success(player.dexterity, monster.agility)) {
+    		if(hit_success(player.dexterity, monster.agility) && !gameover) {
     			monster.health = cur_health(monster.health, dmg_attack(player.strength, player.level)/3, 0);
     		}
     		if(monster.health == 0) {
@@ -77,7 +77,8 @@ int resolve_action(char *action)
     				//allocation then back to map
     			}
     			else {
-    				//bring back to map
+    				put_stats(db_name_temp, "Player", player, playerexp);
+    				puts("<meta http-equiv=\"refresh\" content=\"0; url=/cgi-bin/MP1/map_handler.cgi\"/>");
     			}
     		}
     	}
@@ -93,7 +94,8 @@ int resolve_action(char *action)
     				//allocation then back to map
     			}
     			else {
-    				//bring back to map
+    				put_stats(db_name_temp, "Player", player, playerexp);
+    				puts("<meta http-equiv=\"refresh\" content=\"0; url=/cgi-bin/MP1/map_handler.cgi\"/>");
     			}
     		}
 
@@ -117,7 +119,7 @@ int resolve_action(char *action)
     		}
 
     		//PLAYER'S TURN
-    		if(hit_success(player.dexterity, monster.agility)) {
+    		if(hit_success(player.dexterity, monster.agility) && !gameover) {
     			monster.health = cur_health(monster.health, dmg_attack(player.strength, player.level)/6, 0);
     		}
     		if(monster.health == 0) {
@@ -127,7 +129,8 @@ int resolve_action(char *action)
     				//allocation then back to map
     			}
     			else {
-    				//bring back to map
+    				put_stats(db_name_temp, "Player", player, playerexp);
+    				puts("<meta http-equiv=\"refresh\" content=\"0; url=/cgi-bin/MP1/map_handler.cgi\"/>");
     			}
     		}
     	}
@@ -143,7 +146,8 @@ int resolve_action(char *action)
     				//allocation then back to map
     			}
     			else {
-    				//bring back to map
+    				put_stats(db_name_temp, "Player", player, playerexp);
+    				puts("<meta http-equiv=\"refresh\" content=\"0; url=/cgi-bin/MP1/map_handler.cgi\"/>");
     			}
     		}
 
@@ -167,7 +171,7 @@ int resolve_action(char *action)
     		}
 
     		//PLAYER'S TURN
-    		if(hit_success(player.dexterity, monster.agility)) {
+    		if(hit_success(player.dexterity, monster.agility) && !gameover) {
     			monster.health = cur_health(monster.health, dmg_skill(player.intelligence, player.level)/3, 0);
     			player.health = cur_health(player.health, dmg_skill(player.intelligence, player.level)/6, 0);
     			if(player.health == 0) {
@@ -181,7 +185,8 @@ int resolve_action(char *action)
     				//allocation then back to map
     			}
     			else {
-    				//bring back to map
+    				put_stats(db_name_temp, "Player", player, playerexp);
+    				puts("<meta http-equiv=\"refresh\" content=\"0; url=/cgi-bin/MP1/map_handler.cgi\"/>");
     			}
     		}
     	}
@@ -201,12 +206,13 @@ int resolve_action(char *action)
     				//allocation then back to map
     			}
     			else {
-    				//bring back to map
+					put_stats(db_name_temp, "Player", player, playerexp);
+    				puts("<meta http-equiv=\"refresh\" content=\"0; url=/cgi-bin/MP1/map_handler.cgi\"/>");
     			}
     		}
 
     		//MONSTER'S TURN
-    		if(hit_success(monster.dexterity, player.agility)) {
+    		if(hit_success(monster.dexterity, player.agility) && !gameover) {
     			player.health = cur_health(player.health, dmg_attack(monster.strength, monster.level)/3, 0);
     		}
     		if(player.health == 0) {
@@ -225,13 +231,17 @@ int resolve_action(char *action)
     		}
 
     		//PLAYER'S TURN
-	    	if(flee_success(player.agility, player.level, monster.level)) {
+	    	if(flee_success(player.agility, player.level, monster.level) && !gameover) {
+	    		player.health = player.vitality;
+	    		put_stats(db_name_temp, "Player", player, playerexp);
 	    	    puts("<meta http-equiv=\"refresh\" content=\"0; url=/cgi-bin/MP1/map_handler.cgi\"/>");
 	    	}
     	}
     	else {
     		//PLAYER FIRST
 	    	if(flee_success(player.agility, player.level, monster.level)) {
+	    		player.health = player.vitality;
+	    		put_stats(db_name_temp, "Player", player, playerexp);
 	    	    puts("<meta http-equiv=\"refresh\" content=\"0; url=/cgi-bin/MP1/map_handler.cgi\"/>");
 	    	}
 
@@ -336,7 +346,12 @@ void print_battle(int gameover)
 				puts("<label class=\"radio-inline\">");
 			  		puts("<input type=\"radio\" name=\"Action\" value=\"Run\">Run");
 				puts("</label>");
+			if(!gameover) {
 				puts("<button type=\"submit\" class=\"btn btn-default\">Submit</button>");
+			}
+			else if(gameover) {
+				puts("<button type=\"submit\" class=\"btn btn-default disabled\" disabled>Submit</button>");
+			}
 			puts("</form>");
 		puts("</div>");
 	if(!gameover) {
@@ -349,5 +364,11 @@ void print_battle(int gameover)
 			puts("<iframe name=\"gameover\" src =\"/MP1/iframegameover.html\" style=\"height:90px; width:30%%\"></iframe>");
 		puts("</div>");
 	}
+		puts("<div class=\"container\">");
+			puts("<button class=\"btn dropdown-toggle disabled\" type=\"button\" data-toggle=\"dropdown\" disabled>");
+				puts("<h4 class=\"list-group-item-heading text-left\">Save Game</h4>");
+			puts("</button>");
+			puts("<a href=\"/cgi-bin/MP1/main_menu.cgi\">EXIT GAME</a>");
+		puts("</div>");
 	puts("</div>");
 }

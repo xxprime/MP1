@@ -19,9 +19,13 @@ int main()
     char *data = NULL;
     char *mode = NULL;
     int str, intel, vit, agi, dex;
-    
+    str = cgi_mysql_getvalue(db_name_temp, "Player", 1, 3, 1);
+    intel = cgi_mysql_getvalue(db_name_temp, "Player", 1, 4, 1);
+    vit = cgi_mysql_getvalue(db_name_temp, "Player", 1, 5, 1);
+    agi = cgi_mysql_getvalue(db_name_temp, "Player", 1, 6, 1);
+    dex = cgi_mysql_getvalue(db_name_temp, "Player", 1, 7, 1);
 
-    cgi_init("MP1 Title_newgame");
+    cgi_init("MP1 Title_Allocation");
 
     if(getenv("CONTENT_LENGTH")) {
         data = post_init(atoi(getenv("CONTENT_LENGTH")),0);
