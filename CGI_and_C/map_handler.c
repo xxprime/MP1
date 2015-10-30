@@ -123,15 +123,16 @@ int fightorflight(int flag)
 			return 1;
 		}
 		else {
-			sprintf(statement,"INSERT INTO Monster VALUES(\"%s\", %d, 1)", "DRK SANIC", t_level);
-			//cgi_mysql_statement(db_name, statement, 1);
-			return 0;
+			sprintf(statement,"INSERT INTO Monster VALUES(\"%s\", %d, 1)", "DRKSANIC", t_level);
+			cgi_mysql_statement(db_name, statement, 1);
+    		puts("<meta http-equiv=\"refresh\" content=\"0; url=/cgi-bin/MP1/battle_handler.cgi\"/>");
+			
 		}
 	}
 	else {
-		sprintf(statement,"INSERT INTO Monster VALUES(\"%s\", %d, 0)", "DRK SANIC", t_level);
-		//cgi_mysql_statement(db_name, statement, 1);
-		return 0;
+		sprintf(statement,"INSERT INTO Monster VALUES(\"%s\", %d, %d, %d, %d, %d, %d, 0)", "DRKSANIC", t_level, t_level, t_level, t_level, t_level, t_level);
+		cgi_mysql_statement(db_name, statement, 1);
+		puts("<meta http-equiv=\"refresh\" content=\"0; url=/cgi-bin/MP1/battle_handler.cgi\"/>");
 	}
 	return 0;
 }
