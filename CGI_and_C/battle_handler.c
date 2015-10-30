@@ -73,7 +73,7 @@ int resolve_action(char *action)
     		if(monster.health == 0) {
     			player.health = player.vitality;
     			playerexp = playerexp + 1;
-    			if(playerexp == player.level) {
+    			if(playerexp >= player.level) {
     				//allocation then back to map
     			}
     			else {
@@ -90,8 +90,8 @@ int resolve_action(char *action)
     		if(monster.health == 0) {
     			player.health = player.vitality;
     			playerexp = playerexp + 1;
-    			if(playerexp == player.level) {
-    				//allocation then back to map
+    			if(playerexp >= player.level) {
+    				puts("<meta http-equiv=\"refresh\" content=\"0; url=/cgi-bin/MP1/battle_allocation.cgi\"/>");
     			}
     			else {
     				put_stats(db_name_temp, "Player", player, playerexp);
@@ -125,7 +125,7 @@ int resolve_action(char *action)
     		if(monster.health == 0) {
     			player.health = player.vitality;
     			playerexp = playerexp + 1;
-    			if(playerexp == player.level) {
+    			if(playerexp >= player.level) {
     				//allocation then back to map
     			}
     			else {
@@ -142,7 +142,7 @@ int resolve_action(char *action)
     		if(monster.health == 0) {
     			player.health = player.vitality;
     			playerexp = playerexp + 1;
-    			if(playerexp == player.level) {
+    			if(playerexp >= player.level) {
     				//allocation then back to map
     			}
     			else {
@@ -181,7 +181,7 @@ int resolve_action(char *action)
     		if(monster.health == 0) {
     			player.health = player.vitality;
     			playerexp = playerexp + 1;
-    			if(playerexp == player.level) {
+    			if(playerexp >= player.level) {
     				//allocation then back to map
     			}
     			else {
@@ -202,7 +202,7 @@ int resolve_action(char *action)
     		if(monster.health == 0) {
     			player.health = player.vitality;
     			playerexp = playerexp + 1;
-    			if(playerexp == player.level) {
+    			if(playerexp >= player.level) {
     				//allocation then back to map
     			}
     			else {
