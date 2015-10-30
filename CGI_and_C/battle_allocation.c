@@ -18,7 +18,8 @@ int main()
     char name[10]={'\0'};
     char *data = NULL;
     char *mode = NULL;
-    int str = 1, intel = 1, vit = 1, agi = 1, dex = 1;
+    int str, intel, vit, agi, dex;
+    
 
     cgi_init("MP1 Title_newgame");
 

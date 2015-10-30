@@ -50,7 +50,7 @@ void print_menu()
           puts("<div class=\"col-md-2\"></div>");
           puts("<div class=\"col-md-8\">");
               puts("<div class=\"list-group\"> <!--Add Badges, form for new/load, disable load if save files are non-existent-->");
-                  puts("<a href=\"/cgi-bin/MP1/battle_handler.cgi\" class=\"list-group-item\">");
+                  puts("<a href=\"#\" class=\"list-group-item\">");
                       puts("<h4 class \"list-group-item-heading\">How to Play</h4>");
                       puts("<p class=\"list-group-item-text\">Teaches you the basics of the game. It also teaches you how to win.</p>");
                   puts("</a>");
