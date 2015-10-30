@@ -82,7 +82,6 @@ int main()
         }
         if(parse_data(data, "Fight", "multipart/form-data")) {
         	success = fightorflight(atoi(parse_data(data, "Fight", "multipart/form-data")));
-        	printf("SUCCESS: %d", success);
         }
         free(data);
     }
@@ -120,7 +119,6 @@ int fightorflight(int flag)
 	cgi_mysql_statement(db_name, "TRUNCATE TABLE Monster", 1);
 	if(flag) {
 		agi = atoi(cgi_mysql_getvalue(db_name_temp, "Player", 1, 6, 1));
-		printf("%d, %d, %d", agi, s_level, t_level);
 		if(flee_success(agi, s_level, t_level)) {
 			return 1;
 		}
