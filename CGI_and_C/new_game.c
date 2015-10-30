@@ -18,7 +18,7 @@ int main()
     char name[10]={'\0'};
     char *data = NULL;
     char *mode = NULL;
-    int str = 1, intel = 1, vit = 1, agi = 1, dex = 1;
+    int str = 11, intel = 1, vit = 1, agi = 1, dex = 1;
 
     cgi_init("MP1 Title_newgame");
 
@@ -44,8 +44,11 @@ int main()
 void goto_map(char *name, int str, int intel, int vit, int agi, int dex)
 {
     char statement[STATEMENT_LEN];
+    sprintf(statement,"DELETE FROM Player WHERE PlayerName=\"%s\"", name);
+    cgi_mysql_statement(db_name_temp, statement, 1);
     sprintf(statement,"INSERT INTO Player VALUES(\"%s\", 1, %d, %d, %d, %d, %d, 0)", name, str, intel, vit, agi, dex);
     cgi_mysql_statement(db_name_temp,statement,1);
+    puts("<meta http-equiv=\"refresh\" content=\"0; url=/cgi-bin/MP1/map_handler.cgi\"/>");
 }
 
 void print_form(char *name, int str, int intel, int vit, int agi, int dex)

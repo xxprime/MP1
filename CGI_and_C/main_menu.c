@@ -27,6 +27,9 @@ int main()
     }
   }
 
+  if(cgi_mysql_check_db(db_name_temp,0)) {
+    cgi_mysql_statement(db_name_temp, "TRUNCATE TABLE Player", 1);
+  }
   print_menu();
 
   cgi_term();

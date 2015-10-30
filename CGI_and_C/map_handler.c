@@ -14,11 +14,15 @@ void print_css();
 void print_map(coordinate_t pos);
 void print_arrows(int flag, coordinate_t pos, char *name);
 void save_state(char *playerName, char *saveName);
-void loadto_temp(char *playerName, int lvl, int str, int intel, int vit, int agi, int dex, int expe);
+void loadto_temp(char *playerName);
 
 int main()
 {
-	int lvl = 0, str = 0, intel = 0, vit = 0, agi = 0, dex = 0, expe = 0;
+
+	cgi_init_beforecss("MP1 Title_Map");
+	print_css();
+	cgi_init_aftercss();
+
 	int spawn = 0, increment = 0, same = 0;
     char name[10]={'\0'};
     char *data = NULL;
@@ -29,16 +33,13 @@ int main()
     pos.x = 0;
     pos.y = 0;
 
-	cgi_init_beforecss("MP1 Title_Map");
-	print_css();
-	cgi_init_aftercss();
+
 
 	if(getenv("CONTENT_LENGTH")) {
         data = post_init(atoi(getenv("CONTENT_LENGTH")),0);
-        if(parse_data(data, "str", "multipart/form-data")) {
-        	printf("GOT IT");
+        if(parse_data(data, "name", "multipart/form-data")) {
+       		strncpy(name,parse_data(data, "name", "multipart/form-data"),9);
         }
-        strncpy(name,parse_data(data, "name", "multipart/form-data"),9);
         if(parse_data(data, "xprev", "multipart/form-data")) {
         	prev.x = atoi(parse_data(data, "xprev", "multipart/form-data"));
         }
@@ -77,11 +78,12 @@ int main()
         	save_state(name,parse_data(data,"sname","multipart/form-data"));
         	same = 1;
         }
+        free(data);
     }
 
     if((prev.x == 0 && prev.y == 0)) {
     	pos = rand_location();
-    	loadto_temp(name, lvl, str, intel, vit, agi, dex, expe);
+    	loadto_temp(name);
     }
 
     if((prev.x == 0 && prev.y == 0) || same == 1) {
@@ -101,18 +103,20 @@ int main()
     }
 
 	cgi_term();
-	free(data);
 	return 0;
 }
 
-void loadto_temp(char *playerName, int lvl, int str, int intel, int vit, int agi, int dex, int expe)
+void loadto_temp(char *playerName)
 {
+	int lvl = 0, str = 0, intel = 0, vit = 0, agi = 0, dex = 0, expe = 0;
 	int row = 0;
 	char statement[STATEMENT_LEN];
-	sprintf(statement,"DELETE FROM Player WHERE PlayerName=\"%s\"", playerName);
-	cgi_mysql_statement(db_name_temp, statement, 1);
+	if(playerName[0] != '\0') {
 
-	if(lvl == 0) {
+		sprintf(statement,"DELETE FROM Player WHERE PlayerName=\"%s\"", playerName);
+		cgi_mysql_statement(db_name_temp, statement, 1);
+
+
 		row = cgi_mysql_getrow(db_name, "Player", playerName, 1);
 		lvl = atoi(cgi_mysql_getvalue(db_name, "Player", row, 2, 1));
 		str = atoi(cgi_mysql_getvalue(db_name, "Player", row, 3, 1));
@@ -121,13 +125,12 @@ void loadto_temp(char *playerName, int lvl, int str, int intel, int vit, int agi
 		agi = atoi(cgi_mysql_getvalue(db_name, "Player", row, 6, 1));
 		dex = atoi(cgi_mysql_getvalue(db_name, "Player", row, 7, 1));
 		expe = atoi(cgi_mysql_getvalue(db_name, "Player", row, 8, 1));
-    	sprintf(statement,"INSERT INTO Player VALUES(\"%s\", %d, %d, %d, %d, %d, %d, %d)", playerName, lvl, str, intel, vit, agi, dex, expe);
-        cgi_mysql_statement(db_name_temp,statement,1);
+		sprintf(statement,"INSERT INTO Player VALUES(\"%s\", %d, %d, %d, %d, %d, %d, %d)", playerName, lvl, str, intel, vit, agi, dex, expe);
+	    cgi_mysql_statement(db_name_temp,statement,1);
 	}
 
-	else if(lvl == 1 && expe == 0) {
-    	sprintf(statement,"INSERT INTO Player VALUES(\"%s\", %d, %d, %d, %d, %d, %d, %d)", playerName, lvl, str, intel, vit, agi, dex, expe);
-        cgi_mysql_statement(db_name_temp,statement,1);
+	else {
+		strcpy(playerName,cgi_mysql_getvalue(db_name_temp, "Player", 1, 1, 1));
 	}
 }
 
@@ -175,38 +178,38 @@ void print_arrows(int flag, coordinate_t pos, char *name)
 					    puts("</div>");
 					puts("</form>");
 	        	puts("</div>");
-	        puts("<div class=\"container\">");
-			puts("<div class=\"dropdown\">");
-				puts("<button class=\"btn dropdown-toggle\" type=\"button\" data-toggle=\"dropdown\">");
-					puts("<h4 class=\"list-group-item-heading text-left\">Save Game</h4>");
-				puts("</button>");
-				puts("<ul class=\"dropdown-menu\">");
-					puts("<form role=\"form\" action=\"/cgi-bin/MP1/map_handler.cgi\" method=\"post\" enctype=\"multipart/form-data\">");
-						printf("<input type=\"hidden\" class=\"form-control\" name=\"name\" value=\"%s\">",name);
-						printf("<input type=\"hidden\" class=\"form-control\" name=\"yprev\" value=\"%d\">",pos.y);
-						printf("<input type=\"hidden\" class=\"form-control\" name=\"xprev\" value=\"%d\">",pos.x);
-						if(cgi_mysql_getvalue(db_name, "Player", 1, 1, 1)) {
-							printf("<li><button type=\"submit hidden\" name=\"sname\" value=\"%s\" class=\"btn btn-default\">Name:%s Level:%d</button></li>", cgi_mysql_getvalue(db_name, "Player", 1, 1, 1), cgi_mysql_getvalue(db_name, "Player", 1, 1, 1), atoi(cgi_mysql_getvalue(db_name, "Player", 1, 2, 1)));
-						}
-						else {
-							printf("<li><button type=\"submit hidden\" name=\"sname\" value=\"empty_save_state\" class=\"btn btn-default\">empty_save_state</button></li>");
-						}
-						if(cgi_mysql_getvalue(db_name, "Player", 2, 1, 1)) {
-							printf("<li><button type=\"submit hidden\" name=\"sname\" value=\"%s\" class=\"btn btn-default\">Name:%s Level:%d</button></li>", cgi_mysql_getvalue(db_name, "Player", 2, 1, 1), cgi_mysql_getvalue(db_name, "Player", 2, 1, 1), atoi(cgi_mysql_getvalue(db_name, "Player", 2, 2, 1)));
-						}
-						else {
-							printf("<li><button type=\"submit hidden\" name=\"sname\" value=\"empty_save_state\" class=\"btn btn-default\">empty_save_state</button></li>");
-						}
-						if(cgi_mysql_getvalue(db_name, "Player", 3, 1, 1)) {
-							printf("<li><button type=\"submit hidden\" name=\"sname\" value=\"%s\" class=\"btn btn-default\">Name:%s Level:%d</button></li>", cgi_mysql_getvalue(db_name, "Player", 3, 1, 1), cgi_mysql_getvalue(db_name, "Player", 3, 1, 1), atoi(cgi_mysql_getvalue(db_name, "Player", 3, 2, 1)));
-						}
-						else {
-							printf("<li><button type=\"submit hidden\" name=\"sname\" value=\"empty_save_state\" class=\"btn btn-default\">empty_save_state</button></li>");
-						}
-					puts("</form>");
-				puts("</ul>");
-			puts("</div>");
-			puts("</div>");
+		        puts("<div class=\"container\">");
+					puts("<div class=\"dropdown\">");
+						puts("<button class=\"btn dropdown-toggle\" type=\"button\" data-toggle=\"dropdown\">");
+							puts("<h4 class=\"list-group-item-heading text-left\">Save Game</h4>");
+						puts("</button>");
+						puts("<ul class=\"dropdown-menu\">");
+							puts("<form role=\"form\" action=\"/cgi-bin/MP1/map_handler.cgi\" method=\"post\" enctype=\"multipart/form-data\">");
+								printf("<input type=\"hidden\" class=\"form-control\" name=\"name\" value=\"%s\">",name);
+								printf("<input type=\"hidden\" class=\"form-control\" name=\"yprev\" value=\"%d\">",pos.y);
+								printf("<input type=\"hidden\" class=\"form-control\" name=\"xprev\" value=\"%d\">",pos.x);
+								if(cgi_mysql_getvalue(db_name, "Player", 1, 1, 1)) {
+									printf("<li><button type=\"submit hidden\" name=\"sname\" value=\"%s\" class=\"btn btn-default\">Name:%s Level:%d</button></li>", cgi_mysql_getvalue(db_name, "Player", 1, 1, 1), cgi_mysql_getvalue(db_name, "Player", 1, 1, 1), atoi(cgi_mysql_getvalue(db_name, "Player", 1, 2, 1)));
+								}
+								else {
+									printf("<li><button type=\"submit hidden\" name=\"sname\" value=\"empty_save_state\" class=\"btn btn-default\">empty_save_state</button></li>");
+								}
+								if(cgi_mysql_getvalue(db_name, "Player", 2, 1, 1)) {
+									printf("<li><button type=\"submit hidden\" name=\"sname\" value=\"%s\" class=\"btn btn-default\">Name:%s Level:%d</button></li>", cgi_mysql_getvalue(db_name, "Player", 2, 1, 1), cgi_mysql_getvalue(db_name, "Player", 2, 1, 1), atoi(cgi_mysql_getvalue(db_name, "Player", 2, 2, 1)));
+								}
+								else {
+									printf("<li><button type=\"submit hidden\" name=\"sname\" value=\"empty_save_state\" class=\"btn btn-default\">empty_save_state</button></li>");
+								}
+								if(cgi_mysql_getvalue(db_name, "Player", 3, 1, 1)) {
+									printf("<li><button type=\"submit hidden\" name=\"sname\" value=\"%s\" class=\"btn btn-default\">Name:%s Level:%d</button></li>", cgi_mysql_getvalue(db_name, "Player", 3, 1, 1), cgi_mysql_getvalue(db_name, "Player", 3, 1, 1), atoi(cgi_mysql_getvalue(db_name, "Player", 3, 2, 1)));
+								}
+								else {
+									printf("<li><button type=\"submit hidden\" name=\"sname\" value=\"empty_save_state\" class=\"btn btn-default\">empty_save_state</button></li>");
+								}
+							puts("</form>");
+						puts("</ul>");
+					puts("</div>");
+				puts("</div>");
 			puts("<iframe name=\"result\" style=\"height:90px; width:30%%\"></iframe>");
 			puts("</div>");
 	    puts("</div>");
