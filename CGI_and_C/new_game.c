@@ -20,7 +20,7 @@ int main()
     char *mode = NULL;
     int str = 1, intel = 1, vit = 1, agi = 1, dex = 1;
 
-    cgi_init("MP1 Title_newgame");
+    cgi_init("SANIC_newgame");
 
     if(getenv("CONTENT_LENGTH")) {
         data = post_init(atoi(getenv("CONTENT_LENGTH")),0);

@@ -20,7 +20,7 @@ int main()
 	int gameover = 0;
 	char *data = NULL;
 	char action[7];
-	cgi_init_beforecss("MP1 Title_Battle");
+	cgi_init_beforecss("SANIC_Battle");
 	cgi_init_aftercss();
 
     if(getenv("CONTENT_LENGTH")) {

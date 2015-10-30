@@ -26,7 +26,7 @@ int main()
     agi = atoi(cgi_mysql_getvalue(db_name_temp, "Player", 1, 6, 1));
     dex = atoi(cgi_mysql_getvalue(db_name_temp, "Player", 1, 7, 1));
     max = str + intel + vit + agi + dex + 5;
-    cgi_init("MP1 Title_Allocation");
+    cgi_init("SANIC_Allocation");
 
     if(getenv("CONTENT_LENGTH")) {
         data = post_init(atoi(getenv("CONTENT_LENGTH")),0);

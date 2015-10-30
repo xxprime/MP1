@@ -21,7 +21,7 @@ int fightorflight(int flag);
 int main()
 {
 
-	cgi_init_beforecss("MP1 Title_Map");
+	cgi_init_beforecss("SANIC_Map");
 	print_css();
 	cgi_init_aftercss();
 
