@@ -46,7 +46,7 @@ void goto_map(char *name, int str, int intel, int vit, int agi, int dex)
     char statement[STATEMENT_LEN];
     sprintf(statement,"DELETE FROM Player WHERE PlayerName=\"%s\"", name);
     cgi_mysql_statement(db_name_temp, statement, 1);
-    sprintf(statement,"INSERT INTO Player VALUES(\"%s\", 1, %d, %d, %d, %d, %d, 0)", name, str, intel, vit, agi, dex);
+    sprintf(statement,"INSERT INTO Player VALUES(\"%s\", 1, %d, %d, %d, %d, %d, 0, %d)", name, str, intel, vit, agi, dex, vit);
     cgi_mysql_statement(db_name_temp,statement,1);
     puts("<meta http-equiv=\"refresh\" content=\"0; url=/cgi-bin/MP1/map_handler.cgi\"/>");
 }
