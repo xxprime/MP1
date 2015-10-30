@@ -6,6 +6,56 @@
 #define USER "root"
 #define PASS "root"
 
+int cgi_mysql_getrow(char *db_name, char *table_name, char *PlayerName, int flag)
+{
+	MYSQL mysql;
+	MYSQL_RES *result;
+	MYSQL_ROW row;
+	int row_num = 1;
+	char statement[STATEMENT_LEN];
+
+	if(!mysql_init(&mysql) && flag) {
+		printf("getrow:ERROR %u (%s): %s<br/>", mysql_errno(&mysql), mysql_sqlstate(&mysql), mysql_error(&mysql));
+	}	
+
+    sprintf(statement,"SELECT * FROM %s", table_name);
+
+	if(mysql_real_connect(&mysql, "localhost", USER, PASS, db_name, 0, NULL, 0)) {
+		if(mysql_query(&mysql, statement)) {
+			if(flag){	
+        		printf("getrow:ERROR %u (%s): %s<br/>", mysql_errno(&mysql), mysql_sqlstate(&mysql), mysql_error(&mysql));
+        	}
+        }
+        else {
+        	result = mysql_store_result(&mysql);
+        	while(row_num < 4) {
+        		row = mysql_fetch_row(result);
+        		if(!row) {
+        			mysql_close(&mysql);
+        			return 0;
+        		}
+        		if(!strcmp(PlayerName, row[0])) {
+        			mysql_close(&mysql);
+        			return row_num;
+        		}
+        		row_num++;
+        	}
+        	mysql_close(&mysql);
+        	return 0;
+        }
+	}
+
+	else {
+		if(flag) {
+			printf("getrow:ERROR %u (%s): %s<br/>", mysql_errno(&mysql), mysql_sqlstate(&mysql), mysql_error(&mysql));
+		}
+		mysql_close(&mysql);
+		return 0;
+	}
+	mysql_close(&mysql);	
+	return 0;
+}
+
 char *cgi_mysql_getvalue(char *db_name, char *table_name, int num_row, int num_column, int flag)
 {
 	MYSQL mysql;
